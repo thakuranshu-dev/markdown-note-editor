@@ -1,44 +1,51 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 import { useSwipeable } from 'react-swipeable';
 
 const getMarkdownText = (markdown) => {
-  	const rawHtml = marked.parse(markdown, { breaks: true });
-  	return { __html: DOMPurify.sanitize(rawHtml) };
+	const rawHtml = marked.parse(markdown, { breaks: true });
+	return { __html: DOMPurify.sanitize(rawHtml) };
 };
-const [saved_notes, setNotes] = useState([]);
-		useEffect(() => {
-			const notes = JSON.parse(localStorage.getItem('notes')) || [];
-			setNotes(notes);
-		}, []);
-	
-const Note = ({ markdownNote, noteKey}) => {
-	
-	const config = {
-		onSwipedLeft: () => {console.log('Swiped Left')},
-		onSwipedRight: () => {console.log('Swiped Right')
-			saved_notes.splice(noteKey, 1);
-			localStorage.setItem('notes', JSON.stringify(saved_notes));
-		},
-		preventDefaultTouchmoveEvent: true,
-		trackMouse: true
+
+const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex }) => {
+	const handleDelete = (noteKey) => {
+		const updatedNotes = [...savedNotes];
+		updatedNotes.splice(noteKey, 1);
+		setSavedNotes(updatedNotes);
+		localStorage.removeItem('notes');
+		localStorage.setItem('notes', JSON.stringify(updatedNotes));
 	};
-	const handlers = useSwipeable(config);
+	const handleEdit = (noteKey) => {
+		const updatedNotes = [...savedNotes];
+		updatedNotes.splice(noteKey, 1);
+		setSavedNotes(updatedNotes);
+		localStorage.removeItem('notes');
+		localStorage.setItem('notes', JSON.stringify(updatedNotes));
+		// fix this method.
+	};
+	const config = {
+				onSwipedLeft: () => console.log('Swiped Left'),
+				onSwipedRight: () => handleDelete(noteIndex),
+				preventDefaultTouchmoveEvent: true,
+				trackMouse: true,
+			};
+
+			const handlers = useSwipeable(config);
+
 	return (
 		<div className="note relative p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer mb-4 overflow-hidden"
 			title="Click to edit | Right click to delete"
-			style={{ backgroundColor: '#e5e9f2' }} 
+			style={{ backgroundColor: '#e5e9f2' }}
 			{...handlers}
 			>
-			<div className="relative z-10">
-			<div className="markdown-body p-4 rounded shadow bg-white overflow-y-auto"
-				dangerouslySetInnerHTML={ getMarkdownText(markdownNote) }
-				/>
-			</div>
+				<div className="relative z-10">
+				<div className="markdown-body p-4 rounded shadow bg-white overflow-y-auto"
+					dangerouslySetInnerHTML={getMarkdownText(mdNote)}
+				/> </div>
 		</div>
 	);
 };
 
-export default Note;
+export default StickyNotes;

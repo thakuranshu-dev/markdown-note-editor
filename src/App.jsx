@@ -1,22 +1,28 @@
 // App.jsx
 import React, { useState, useEffect } from 'react';
 import MarkdownEditor from './components/MarkdownEditor';
-import StickyNote from './components/stickyNote';
+import StickyNotes from './components/stickyNote';
 import 'github-markdown-css/github-markdown-light.css';
 
 const App = () => {
   	const [savedNotes, setSavedNotes] = useState([]);
   	useEffect(() => {
-    	const notes = JSON.parse(localStorage.getItem('notes')) || [];
-    	setSavedNotes(notes);
+		try {
+			const notes = JSON.parse(localStorage.getItem('notes')) || [];
+    		setSavedNotes(notes);
+		} catch (error) {
+			setSavedNotes([]);
+			console.error('Error parsing saved notes from localStorage:', error);
+		}
   	}, []);
 
+  	// Pass setSavedNotes to children so they can update notes
   	return (
     	<div className="flex h-screen">
       		{/* Editor Panel */}
       		<div className={"fixed md:static top-0 left-0 w-full md:w-1/2 h-full z-20 bg-white transition-transform duration-300 ease-in-out 'translate-x-0"}
       		>
-        		<MarkdownEditor />
+        		<MarkdownEditor savedNotes={savedNotes} setSavedNotes={setSavedNotes} />
       		</div>
 
       		{/* Saved Notes Panel */}
@@ -28,14 +34,15 @@ const App = () => {
 				{/* Using Ternary Operator */}
 				{savedNotes.length === 0 ? (
 					<p className="text-gray-500">No notes saved yet.</p>
-				) : (
-					savedNotes.map((note, index) => (
-						<StickyNote
-						key={index}
-						noteId={index + 1}
-						markdownNote={note}
+				) : (savedNotes.map((markdownNote, idx) => (
+						<StickyNotes
+						key={idx}
+						savedNotes={savedNotes}
+						setSavedNotes={setSavedNotes}
+						noteIndex={idx} 
+						mdNote={markdownNote}
 						/>
-					))
+            		))
 				)}
 			</div>
     	</div>

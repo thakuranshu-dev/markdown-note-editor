@@ -3,7 +3,7 @@ import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 
-const MarkdownEditor = () => {
+const MarkdownEditor = ({ savedNotes, setSavedNotes }) => {
   	const [markdown, setMarkdown] = useState('# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...');
 
   	const handleChange = (e) => {
@@ -11,13 +11,14 @@ const MarkdownEditor = () => {
   	};
 
 	const handleSave = () => {
-		if(markdown.trim() !== '' && markdown.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...') {
-			let notes = JSON.parse(localStorage.getItem('notes')) || [];
-				notes.push(markdown);
-				localStorage.setItem('notes', JSON.stringify(notes));
-		}
-		else{
-			alert("Please write something before saving!");
+		if (markdown.trim() !== '' &&
+			markdown.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...') {
+			const notes = [...savedNotes, markdown];
+			setSavedNotes(notes);
+			localStorage.removeItem('notes');
+			localStorage.setItem('notes', JSON.stringify(notes));
+		} else {
+			alert('Please write something before saving!');
 		}
 	};
 
@@ -41,9 +42,12 @@ const MarkdownEditor = () => {
 				/>
 			</div>
 			<div className="flex justify-center">
-				<button className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition text-lg font-semibold"
+				<button
+					className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition text-lg font-semibold"
 					style={styles.saveButton}
-					onClick={handleSave}> Keep Note
+					onClick={handleSave}
+				>
+					Keep Note
 				</button>
 			</div>
 		</div>
