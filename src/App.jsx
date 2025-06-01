@@ -6,6 +6,7 @@ import 'github-markdown-css/github-markdown-light.css';
 
 const App = () => {
   	const [savedNotes, setSavedNotes] = useState([]);
+	const [markdown, setMarkdown] = useState('# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...');
   	useEffect(() => {
 		try {
 			const notes = JSON.parse(localStorage.getItem('notes')) || [];
@@ -22,7 +23,10 @@ const App = () => {
       		{/* Editor Panel */}
       		<div className={"fixed md:static top-0 left-0 w-full md:w-1/2 h-full z-20 bg-white transition-transform duration-300 ease-in-out 'translate-x-0"}
       		>
-        		<MarkdownEditor savedNotes={savedNotes} setSavedNotes={setSavedNotes} />
+        		<MarkdownEditor savedNotes={savedNotes} 
+				setSavedNotes={setSavedNotes} 
+				markdown={markdown} 
+				setMarkdown={setMarkdown} />
       		</div>
 
       		{/* Saved Notes Panel */}
@@ -41,6 +45,7 @@ const App = () => {
 						setSavedNotes={setSavedNotes}
 						noteIndex={idx} 
 						mdNote={markdownNote}
+						setMarkdown={setMarkdown}
 						/>
             		))
 				)}

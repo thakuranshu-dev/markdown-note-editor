@@ -9,7 +9,7 @@ const getMarkdownText = (markdown) => {
 	return { __html: DOMPurify.sanitize(rawHtml) };
 };
 
-const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex }) => {
+const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex , setMarkdown}) => {
 	const handleDelete = (noteKey) => {
 		const updatedNotes = [...savedNotes];
 		updatedNotes.splice(noteKey, 1);
@@ -18,15 +18,10 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex }) => {
 		localStorage.setItem('notes', JSON.stringify(updatedNotes));
 	};
 	const handleEdit = (noteKey) => {
-		const updatedNotes = [...savedNotes];
-		updatedNotes.splice(noteKey, 1);
-		setSavedNotes(updatedNotes);
-		localStorage.removeItem('notes');
-		localStorage.setItem('notes', JSON.stringify(updatedNotes));
-		// fix this method.
+		setMarkdown(savedNotes[noteKey]);
 	};
 	const config = {
-				onSwipedLeft: () => console.log('Swiped Left'),
+				onSwipedLeft: () => handleEdit(noteIndex),
 				onSwipedRight: () => handleDelete(noteIndex),
 				preventDefaultTouchmoveEvent: true,
 				trackMouse: true,
@@ -36,7 +31,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex }) => {
 
 	return (
 		<div className="note relative p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer mb-4 overflow-hidden"
-			title="Click to edit | Right click to delete"
+			title="Swipe left to edit | Swipe right to delete"
 			style={{ backgroundColor: '#e5e9f2' }}
 			{...handlers}
 			>

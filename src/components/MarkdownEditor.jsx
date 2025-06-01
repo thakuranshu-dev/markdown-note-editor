@@ -3,8 +3,8 @@ import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 
-const MarkdownEditor = ({ savedNotes, setSavedNotes }) => {
-  	const [markdown, setMarkdown] = useState('# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...');
+const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) => {
+  	// const [markdown, setMarkdown] = useState('# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...');
 
   	const handleChange = (e) => {
    		setMarkdown(e.target.value);
@@ -14,7 +14,15 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes }) => {
 		if (markdown.trim() !== '' &&
 			markdown.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...') {
 			const notes = [...savedNotes, markdown];
-			setSavedNotes(notes);
+			
+			const existingNoteIndex = savedNotes.findIndex(note => note === markdown);
+			if (existingNoteIndex !== -1) {
+				const updatedNotes = [...savedNotes];
+				updatedNotes[existingNoteIndex] = markdown;
+				setSavedNotes(updatedNotes);
+			} else 
+				setSavedNotes(notes);
+
 			localStorage.removeItem('notes');
 			localStorage.setItem('notes', JSON.stringify(notes));
 		} else {
