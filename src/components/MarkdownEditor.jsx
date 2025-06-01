@@ -13,17 +13,17 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 	const handleSave = () => {
 		if (markdown.trim() !== '' &&
 			markdown.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...') {
-			const notes = [...savedNotes, markdown];
-			
-			const existingNoteIndex = savedNotes.findIndex(note => note === markdown);
-			if (existingNoteIndex !== -1) {
-				const updatedNotes = [...savedNotes];
-				updatedNotes[existingNoteIndex] = markdown;
-				setSavedNotes(updatedNotes);
-			} else 
-				setSavedNotes(notes);
-
-			localStorage.removeItem('notes');
+				let notes ;
+				const existingNoteIndex = savedNotes.findIndex(note => note === markdown);
+				if (existingNoteIndex !== -1) {
+					notes = [...savedNotes];
+					notes[existingNoteIndex] = markdown;
+					setSavedNotes(notes);
+				} else {
+					notes = [...savedNotes, markdown];
+            		setSavedNotes(notes);
+				}
+			// localStorage.removeItem('notes');
 			localStorage.setItem('notes', JSON.stringify(notes));
 		} else {
 			alert('Please write something before saving!');
