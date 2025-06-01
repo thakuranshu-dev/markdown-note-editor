@@ -4,26 +4,29 @@ import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 
 const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) => {
-  	// const [markdown, setMarkdown] = useState('# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...');
 
   	const handleChange = (e) => {
    		setMarkdown(e.target.value);
   	};
 
 	const handleSave = () => {
-		if (markdown.trim() !== '' &&
-			markdown.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...') {
-				let notes ;
-				const existingNoteIndex = savedNotes.findIndex(note => note === markdown);
-				if (existingNoteIndex !== -1) {
-					notes = [...savedNotes];
-					notes[existingNoteIndex] = markdown;
-					setSavedNotes(notes);
-				} else {
-					notes = [...savedNotes, markdown];
-            		setSavedNotes(notes);
-				}
-			// localStorage.removeItem('notes');
+		
+		const markdownStr = typeof markdown === 'string' ? markdown : JSON.stringify(markdown);
+
+		if (
+			markdownStr.trim() !== '' &&
+			markdownStr.trim() !== '# Welcome to Markdown Editor\n\nThis is a simple markdown editor. Start typing your markdown here...'
+		) {
+			let notes;
+			const existingNoteIndex = savedNotes.findIndex(note => note === markdownStr);
+			if (existingNoteIndex !== -1) {
+				notes = [...savedNotes];
+				notes[existingNoteIndex] = markdownStr;
+				setSavedNotes(notes);
+			} else {
+				notes = [...savedNotes, markdownStr];
+				setSavedNotes(notes);
+			}
 			localStorage.setItem('notes', JSON.stringify(notes));
 		} else {
 			alert('Please write something before saving!');

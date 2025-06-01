@@ -1,4 +1,3 @@
-// App.jsx
 import React, { useState, useEffect } from 'react';
 import MarkdownEditor from './components/MarkdownEditor';
 import StickyNotes from './components/stickyNote';
@@ -17,7 +16,6 @@ const App = () => {
 		}
   	}, []);
 
-  	// Pass setSavedNotes to children so they can update notes
   	return (
     	<div className="flex h-screen">
       		{/* Editor Panel */}
@@ -35,7 +33,6 @@ const App = () => {
 					<h2 className="text-2xl font-bold">Saved Notes...</h2>
 				</div>
 
-				{/* Using Ternary Operator */}
 				{savedNotes.length === 0 ? (
 					<p className="text-gray-500">No notes saved yet.</p>
 				) : (savedNotes.map((markdownNote, idx) => (

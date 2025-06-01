@@ -32,11 +32,11 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex , setMarkdow
 	const handlers = useSwipeable({
         onSwipedLeft: () => {
             setSwipe('left');
-            setTimeout(() => handleEdit(noteIndex), 300); // Wait for animation
+            setTimeout(() => handleEdit(noteIndex), 300); 
         },
         onSwipedRight: () => {
             setSwipe('right');
-            setTimeout(() => handleDelete(noteIndex), 300); // Wait for animation
+            setTimeout(() => handleDelete(noteIndex), 300); 
         },
         preventDefaultTouchmoveEvent: true,
         trackMouse: true,
