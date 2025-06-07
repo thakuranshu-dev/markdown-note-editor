@@ -55,12 +55,12 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex , setMarkdow
         >
             {/* Background Icon */}
             {swipe === 'right' && (
-                <div className="absolute left-10 inset-0 flex items-center justify-end pr-8 pointer-events-none">
+                <div className="absolute left-10 top-10 flex items-center justify-end pr-8 pointer-events-none">
                     <FaTrash size={32} color="#e53e3e" className='z-index 1000' />
                 </div>
             )}
             {swipe === 'left' && (
-                <div className="absolute right-10 inset-0 flex items-center justify-start pl-8 pointer-events-none">
+                <div className="absolute right-10 top-10 flex items-center justify-start pl-8 pointer-events-none">
                     <FaEdit size={32} color="#3182ce" className='z-index 1000'/>
                 </div>
             )}
@@ -86,3 +86,5 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex , setMarkdow
 };
 
 export default StickyNotes;
+
+// Commit message: fixed bug related to showing action icons
