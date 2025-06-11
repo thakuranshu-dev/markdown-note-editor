@@ -29,6 +29,7 @@ Capture thoughts effortlessly, transform ideas into notes.
 - 🎨 **Responsive Design:** Built with Tailwind CSS for a visually appealing experience across all devices.
 - 🔍 **Linting and Best Practices:** Integrated ESLint configuration ensures high code quality and maintainability.
 - ⚡ **Hot Module Replacement (HMR):** Experience faster development with live updates without full page reloads.
+- ⬇ **Export/Download note:** You can export/download your notes as .md or .html by double-clicking or long-pressing the note.
 
 ---
 
