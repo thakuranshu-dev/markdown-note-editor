@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import MarkdownEditor from './components/MarkdownEditor';
-import StickyNotes from './components/stickyNote';
+import StickyNotes from './components/StickyNote';
 import 'github-markdown-css/github-markdown-light.css';
 
 const App = () => {
@@ -42,8 +42,7 @@ const App = () => {
 						setSavedNotes={setSavedNotes}
 						noteIndex={idx} 
 						mdNote={markdownNote}
-						setMarkdown={setMarkdown}
-						/>
+						setMarkdown={setMarkdown}/>
             		))
 				)}
 			</div>

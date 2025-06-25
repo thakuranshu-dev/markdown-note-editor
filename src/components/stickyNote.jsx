@@ -98,6 +98,8 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
             className={`note-container relative mb-4 rounded-lg`}
             title='Swipe left to edit, right to delete. Long-press or double-click to download.'
             style={{
+                maxHeight: '80%',
+                    overflowY: 'auto',
                 background: swipe === 'right' ? '#ffdddd' : swipe === 'left' ? '#ddeeff' : '#e5e9f2',
                 transition: 'background 0.3s',
                 overflow: 'hidden',

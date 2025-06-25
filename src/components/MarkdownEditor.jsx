@@ -42,9 +42,9 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		console.log('AI prompt:', promptText);
 		if (promptText.trim().length > 0) {
 			setLoading(true);
-			promptText = promptText + "Here is the link of the GitHub repository. Write a detailed documentation based on this repo in markdown format."
+			promptText = promptText + "Here is the link of the GitHub repository. Write a detailed documentation based on this repo in markdown format. No need to say anything else. Just write the documentation";
 			try {
-				const response = await fetch('http://youe/server/address', { // Replace with your server address
+				const response = await fetch('http://127.0.0.1:5000/solve', { // Replace with your server address
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify({ text: promptText }),
