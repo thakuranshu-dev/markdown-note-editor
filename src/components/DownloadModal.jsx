@@ -1,6 +1,6 @@
 import React from 'react';
 
-const DownloadModal = ({ open, onClose, onDownloadMd, onDownloadHtml }) => {
+const DownloadModal = ({ open, onClose, onDownloadMd, onDownloadHtml, onDownloadPdf }) => {
     if (!open) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent bg-opacity-10 backdrop-blur-sm">
@@ -17,6 +17,12 @@ const DownloadModal = ({ open, onClose, onDownloadMd, onDownloadHtml }) => {
                     onClick={onDownloadHtml}
                 >
                     Download as .html
+                </button>
+                <button
+                    className="w-full mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                    onClick={onDownloadPdf}
+                >
+                    Download as .pdf
                 </button>
                 <button
                     className="w-full px-4 py-2 bg-gray-300 rounded hover:bg-red-500"

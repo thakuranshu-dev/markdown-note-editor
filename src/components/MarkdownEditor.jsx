@@ -4,9 +4,13 @@ import { marked } from 'marked';
 import 'github-markdown-css/github-markdown-light.css';
 
 const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) => {
+  	const [loading, setLoading] = useState(false);
+	const [isAIDocs, setIsAIDocs] = useState(false);
 
   	const handleChange = (e) => {
-   		setMarkdown(e.target.value);
+   		const value = e.target.value;
+   		setIsAIDocs(value.startsWith('@ai_docs'));
+   		setMarkdown(value);
   	};
 
 	const handleSave = () => {
@@ -33,6 +37,28 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		}
 	};
 
+	const handleGenerate = async () => {
+		let promptText = markdown.replace(/^@ai_docs\s*/, '');
+		console.log('AI prompt:', promptText);
+		if (promptText.trim().length > 0) {
+			setLoading(true);
+			promptText = promptText + "Here is the link of the GitHub repository. Write a detailed documentation based on this repo in markdown format."
+			try {
+				const response = await fetch('http://youe/server/address', { // Replace with your server address
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ text: promptText }),
+				});
+				const data = await response.json();
+				console.log('AI response:', data);
+				setMarkdown(data.solution || '');
+			} catch (err) {
+				setMarkdown('Error fetching AI docs.');
+			}
+			setLoading(false);
+		}
+	};
+
 	const getMarkdownText = () => {
 		const rawHtml = marked.parse(markdown, { breaks: true });
 		return { __html: DOMPurify.sanitize(rawHtml) };
@@ -46,6 +72,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 					value={markdown}
 					onChange={handleChange}
 					placeholder="Write your markdown here..."
+					disabled={loading}
 				/>
 				<div className="markdown-body p-4 rounded shadow bg-white overflow-y-auto"
 					style={styles.preview}
@@ -53,14 +80,25 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 				/>
 			</div>
 			<div className="flex justify-center">
-				<button
-					className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition text-lg font-semibold"
-					style={styles.saveButton}
-					onClick={handleSave}
-				>
-					Keep Note
-				</button>
+				{isAIDocs ? (
+					<button
+						className="w-80 px-4 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition text-lg font-semibold"
+						onClick={handleGenerate}
+						disabled={loading}
+					>
+						{loading ? 'Generating...' : 'Generate'}
+					</button>
+				) : (
+					<button
+						className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition text-lg font-semibold"
+						style={styles.saveButton}
+						onClick={handleSave}
+					>
+						Keep Note
+					</button>
+				)}
 			</div>
+			{loading && <div className="text-blue-600 mt-2">Generating with AI...</div>}
 		</div>
 	);
 };

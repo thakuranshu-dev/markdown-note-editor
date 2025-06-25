@@ -56,6 +56,18 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
         setModalOpen(false);
     };
 
+    const handleDownloadPdf = () => {
+        const htmlContent = marked.parse(typeof mdNote === 'string' ? mdNote : '');
+        const blob = new Blob([htmlContent], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `note-${noteIndex + 1}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+        setModalOpen(false);
+    };
+
     // Long press/double click handlers
     let pressTimer = null;
     const handlePointerDown = () => {
@@ -130,6 +142,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
                 onClose={() => setModalOpen(false)}
                 onDownloadMd={handleDownloadMd}
                 onDownloadHtml={handleDownloadHtml}
+                onDownloadPdf={handleDownloadPdf}
             />
         </div>
     );
