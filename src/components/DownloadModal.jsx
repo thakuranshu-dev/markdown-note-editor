@@ -2,6 +2,7 @@ import React from 'react';
 
 const DownloadModal = ({ open, onClose, onDownloadMd, onDownloadHtml, onDownloadPdf }) => {
     if (!open) return null;
+    //  This component renders a modal for downloading notes in different formats
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-transparent bg-opacity-10 backdrop-blur-sm">
             <div className="bg-gray-400 rounded-lg shadow-lg p-6 w-80">

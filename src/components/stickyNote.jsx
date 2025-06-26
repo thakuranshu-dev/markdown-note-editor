@@ -5,7 +5,9 @@ import 'github-markdown-css/github-markdown-light.css';
 import { useSwipeable } from 'react-swipeable';
 import { FaTrash, FaEdit } from 'react-icons/fa';
 import DownloadModal from './DownloadModal';
+import jsPDF from 'jspdf';
 
+// Function to convert markdown to sanitized HTML. This function uses DOMPurify to sanitize the HTML output from marked.js
 const getMarkdownText = (markdown) => {
     const safeMarkdown = typeof markdown === 'string' ? markdown : '';
     const rawHtml = marked.parse(safeMarkdown, { breaks: true });
@@ -16,6 +18,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
     const [swipe, setSwipe] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
 
+    // Handle delete and edit actions. These functions are called when the user swipes left or right on a note
     const handleDelete = (noteKey) => {
         const confirmDelete = window.confirm('Are you sure you want to delete this note?');
         if (!confirmDelete) {
@@ -28,11 +31,13 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
         localStorage.setItem('notes', JSON.stringify(updatedNotes));
         setSwipe(null);
     };
+
     const handleEdit = (noteKey) => {
         setMarkdown(savedNotes[noteKey]);
         setSwipe(null);
     };
 
+    // Download handlers for different formats (Markdown, HTML, PDF). These functions create a Blob from the note content and trigger a download
     const handleDownloadMd = () => {
         const blob = new Blob([typeof mdNote === 'string' ? mdNote : ''], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
@@ -57,14 +62,32 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
     };
 
     const handleDownloadPdf = () => {
+        const doc = new jsPDF({
+            unit: 'mm',
+            format: 'a4',
+            wordWrap: 'wrap',
+            orientation: 'portrait',
+            putOnlyUsedFonts: true,
+        });
         const htmlContent = marked.parse(typeof mdNote === 'string' ? mdNote : '');
-        const blob = new Blob([htmlContent], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `note-${noteIndex + 1}.pdf`;
-        a.click();
-        URL.revokeObjectURL(url);
+
+        // Create a temporary container for the HTML to style for A4 if needed
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        tempDiv.style.width = '180mm'; // leave some margin (A4 width is 210mm)
+        // tempDiv.style.fontSize = '12pt';
+        document.body.appendChild(tempDiv);
+
+        doc.html(tempDiv, {
+            callback: function (doc) {
+                doc.save(`note-${noteIndex + 1}.pdf`);
+                document.body.removeChild(tempDiv);
+            },
+            x: 15, // left margin
+            y: 15, // top margin
+            width: 180, // content width in mm (A4 width is 210mm, so 180mm leaves 15mm margin each side)
+            windowWidth: 800 // helps with scaling
+        });
         setModalOpen(false);
     };
 
@@ -98,8 +121,9 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
             className={`note-container relative mb-4 rounded-lg`}
             title='Swipe left to edit, right to delete. Long-press or double-click to download.'
             style={{
-                maxHeight: '80%',
-                    overflowY: 'auto',
+                maxHeight: '75%',
+                overflowY: 'scroll',
+                overflowX: 'hidden',
                 background: swipe === 'right' ? '#ffdddd' : swipe === 'left' ? '#ddeeff' : '#e5e9f2',
                 transition: 'background 0.3s',
                 overflow: 'hidden',
@@ -123,18 +147,14 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
             )}
             {/* Foreground Note */}
             <div
-                className="note relative p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer overflow-hidden z-10"
-                style={{
-                    transform:
-                        swipe === 'right'
-                            ? 'translateX(80px)'
-                            : swipe === 'left'
-                            ? 'translateX(-80px)'
-                            : 'translateX(0)',
-                    transition: 'transform 0.3s',
-                }}
+                className="note relative p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer overflow-y-auto z-10"
+                // style={{
+                //     maxHeight: '80%',
+                //     overflowY: 'auto',
+                // }}
             >
-                <div className="markdown-body p-4 rounded shadow bg-white overflow-y-auto"
+                <div
+                    className="markdown-body p-4 rounded shadow bg-white"
                     dangerouslySetInnerHTML={getMarkdownText(mdNote)}
                 />
             </div>
@@ -151,5 +171,3 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
 };
 
 export default StickyNotes;
-
-// Commit message: Enhanced download functionality with modal support
