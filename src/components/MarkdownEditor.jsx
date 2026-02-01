@@ -1,11 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
+import markedKatex from 'marked-katex-extension';
+import mermaid from 'mermaid';
+import 'katex/dist/katex.min.css';
 import 'github-markdown-css/github-markdown-light.css';
 
 const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) => {
   	const [loading, setLoading] = useState(false);
 	const [isAIDocs, setIsAIDocs] = useState(false);
+	const previewRef = React.useRef(null);
+
+	// Initialize marked with KaTeX extension and configure mermaid
+	useEffect(() => {
+		marked.use(markedKatex({
+			throwOnError: false
+		}));
+		
+		// Configure marked renderer for mermaid code blocks
+		const renderer = {
+			code({text, lang}) {
+				// If code block has language 'mermaid', render it as mermaid diagram
+				if (lang === 'mermaid') {
+					return `<pre class="mermaid">${text}</pre>`;
+				}
+				// Otherwise use default code block rendering
+				return `<pre><code class="language-${lang || 'plaintext'}">${text}</code></pre>`;
+			}
+		};
+		marked.use({ renderer });
+		
+		// Initialize mermaid for diagram rendering
+		mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+	}, []);
+
+	// Effect to render mermaid diagrams whenever markdown changes
+	useEffect(() => {
+		if (previewRef.current && markdown) {
+			// Use setTimeout to ensure DOM is updated before running mermaid
+			setTimeout(() => {
+				mermaid.run();
+			}, 0);
+		}
+	}, [markdown]);
 
   	const handleChange = (e) => {
 		// Check if the input starts with '@ai_docs'. If it does, set isAIDocs to true, otherwise false
@@ -74,11 +111,18 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		}
 	};
 
-	  // Function to get the markdown text as sanitized HTML
+	  // Function to get the markdown text as sanitized HTML with Mermaid support
 	const getMarkdownText = () => {
 		// Use marked to parse the markdown and DOMPurify to sanitize the HTML
 		const rawHtml = marked.parse(markdown, { breaks: true });
-		return { __html: DOMPurify.sanitize(rawHtml) };
+		
+		// Sanitize HTML while allowing mermaid diagrams (SVG elements and pre tags with mermaid class)
+		const sanitizedHtml = DOMPurify.sanitize(rawHtml, { 
+			ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code', 'span', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'blockquote', 'hr', 'br', 'img', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'svg', 'g', 'text', 'line', 'path', 'circle', 'ellipse', 'polygon', 'polyline', 'rect', 'defs', 'style', 'marker', 'tspan', 'title', 'desc'],
+			ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'id', 'xmlns', 'viewBox', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'x', 'y', 'd', 'fill', 'stroke', 'stroke-width', 'text-anchor', 'data-*', 'style', 'transform', 'preserveAspectRatio', 'role', 'aria-label']
+		});
+		
+		return { __html: sanitizedHtml };
 	};
 
 	return (
@@ -93,6 +137,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 					disabled={loading}
 				/>
 				<div className="markdown-body p-4 rounded shadow bg-white overflow-y-auto"
+					ref={previewRef}
 					style={styles.preview}
 					dangerouslySetInnerHTML={getMarkdownText()}
 				/>

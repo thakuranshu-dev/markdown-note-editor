@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import MarkdownEditor from './components/MarkdownEditor';
-import StickyNotes from './components/StickyNote';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import StickyNotes from './components/stickyNote';
+import { BsLayoutSidebarReverse} from "react-icons/bs";
+import {IoClose } from "react-icons/io5";
+
 import 'github-markdown-css/github-markdown-light.css';
 
 const App = () => {
@@ -29,9 +31,11 @@ const App = () => {
             >
                 {/* Toggle Icon */}
                 {drawerOpen ? (
-                    <FaBars size={24} />
+                    // <FaBars size={24} />
+                    <BsLayoutSidebarReverse size={24} />
                 ) : (
-                    <FaTimes size={24} />
+                    // <FaTimes size={24} />
+                    <IoClose size={24} />
                 )}
             </button>
 
@@ -53,7 +57,7 @@ const App = () => {
                 }
             >
                 <div className="flex justify-between items-center mb-4 p-4 md:p-0">
-                    <h2 className="text-2xl font-bold">Saved Notes...</h2>
+                    <h2 className="text-2xl font-bold"> Saved Notes...</h2>
                 </div>
                 {savedNotes.length === 0 ? (
                     <p className="text-gray-500 p-4 md:p-0">No notes saved yet.</p>
