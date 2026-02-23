@@ -48,7 +48,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		// Check if the input starts with '@ai_docs'. If it does, set isAIDocs to true, otherwise false
 		// Continuously update the markdown state to reflect the current input value
    		const value = e.target.value;
-   		setIsAIDocs(value.startsWith('@ai_docs'));
+   		// setIsAIDocs(value.startsWith('@ai_docs'));
    		setMarkdown(value);
   	};
 
@@ -144,7 +144,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 			</div>
 			   {/* Save or Generate Button */}
 			<div className="flex justify-center">
-				{isAIDocs ? (
+				{isAIDocs && 
 					<button
 						className="w-80 px-4 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition text-lg font-semibold"
 						onClick={handleGenerate}
@@ -152,16 +152,17 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 					>
 						{loading ? 'Generating...' : 'Generate'}
 					</button> // If generating AI docs, show the generate button
-				) : (
+				}
+				{!isAIDocs && 
 					<button
-						className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-green-700 transition text-lg font-semibold"
+						className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-blue-700 transition text-lg font-semibold"
 						style={styles.saveButton}
 						onClick={handleSave}
 					>
-						Keep Note
+						Save Doc.
 					</button>
 					// If not generating AI docs, show the save button
-				)}
+				}
 			</div>
 			   {/* Loading Indicator */}
 			{loading && <div className="text-blue-600 mt-2">Generating with AI...</div>}
@@ -172,6 +173,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 // Styles for the MarkdownEditor component. These styles are used to style the container, editor, textarea, preview, and buttons
 const styles = {
   	container: {
+		width: '100%',
 		display: 'flex',
 		flexDirection: 'column',
 		height: '100vh',

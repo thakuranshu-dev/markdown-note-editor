@@ -14,6 +14,18 @@ const getMarkdownText = (markdown) => {
     return { __html: DOMPurify.sanitize(rawHtml) };
 };
 
+const getMarkdownHeading = (markdown) => {
+    const safeMarkdown = typeof markdown === 'string' ? markdown : '';
+    const lines = safeMarkdown.split('\n');
+    for (let line of lines) {
+        if (line.startsWith('# ')) {
+            return getMarkdownText(line.replace('#', '#####'));
+            // return line.replace('# ', '').trim();
+        }
+    }
+    return getMarkdownText('##### Untitled Note');
+};
+
 const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown }) => {
     const [swipe, setSwipe] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
@@ -94,7 +106,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
     // Long press/double click handlers
     let pressTimer = null;
     const handlePointerDown = () => {
-        pressTimer = setTimeout(() => setModalOpen(true), 600); 
+        pressTimer = setTimeout(() => setModalOpen(true), 600);
     };
     const handlePointerUp = () => {
         clearTimeout(pressTimer);
@@ -118,7 +130,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
 
     return (
         <div
-            className={`note-container relative mb-4 rounded-lg`}
+            className={`note-container relative bg-[#e5e9f2]`}
             title='Swipe left to edit, right to delete. Long-press or double-click to download.'
             style={{
                 maxHeight: '75%',
@@ -142,31 +154,36 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
             )}
             {swipe === 'left' && (
                 <div className="absolute right-10 top-10 flex items-center justify-start pl-8 pointer-events-none">
-                    <FaEdit size={32} color="#3182ce" className='z-index 1000'/>
+                    <FaEdit size={32} color="#3182ce" className='z-index 1000' />
                 </div>
             )}
             {/* Foreground Note */}
             <div
-                className="note relative p-4 rounded-lg shadow hover:shadow-md transition cursor-pointer overflow-y-auto z-10"
-                // style={{
-                //     maxHeight: '80%',
-                //     overflowY: 'auto',
-                // }}
+                className="note relative border-b border-gray-200 shadow hover:shadow-md transition cursor-pointer overflow-y-auto z-10"
+            // style={{
+            //     maxHeight: '80%',
+            //     overflowY: 'auto',
+            // }}
             >
-                <div
+                {/* <div
                     className="markdown-body p-4 rounded shadow bg-white"
                     dangerouslySetInnerHTML={getMarkdownText(mdNote)}
                 />
-            </div>
-            {/* Download Modal */}
-            <DownloadModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onDownloadMd={handleDownloadMd}
-                onDownloadHtml={handleDownloadHtml}
-                onDownloadPdf={handleDownloadPdf}
+                </div> */}
+            <div
+            className="markdown-body p-4 shadow bg-[#e5e9f2["
+            dangerouslySetInnerHTML={getMarkdownHeading(mdNote)}
             />
-        </div>
+            </div>
+            {/* Download Modal */ }
+    <DownloadModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onDownloadMd={handleDownloadMd}
+        onDownloadHtml={handleDownloadHtml}
+        onDownloadPdf={handleDownloadPdf}
+    />
+        </div >
     );
 };
 
