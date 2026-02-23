@@ -24,8 +24,9 @@ const App = () => {
         <div className="flex h-screen relative overflow-hidden">
             {/* SideBar Open/Close Icon (Top-Right) */}
             <button
-                className={`fixed top-4 z-50 right-4
-                transform transition-transform duration-300`}
+                className={`absolute z-50 right-4
+                transform transition-transform duration-300
+                ${drawerOpen ? 'top-2' : 'top-4'}`}
                 onClick={() => setDrawerOpen(!drawerOpen)}
                 aria-label={drawerOpen ? "Close saved notes panel" : "Open saved notes panel"}
             >

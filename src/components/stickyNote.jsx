@@ -170,19 +170,19 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
                     dangerouslySetInnerHTML={getMarkdownText(mdNote)}
                 />
                 </div> */}
-            <div
-            className="markdown-body p-4 shadow bg-[#e5e9f2["
-            dangerouslySetInnerHTML={getMarkdownHeading(mdNote)}
-            />
+                <div
+                    className="markdown-body px-4 shadow bg-[#e5e9f2] h-8 flex items-center "
+                    dangerouslySetInnerHTML={getMarkdownHeading(mdNote)}
+                />
             </div>
-            {/* Download Modal */ }
-    <DownloadModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onDownloadMd={handleDownloadMd}
-        onDownloadHtml={handleDownloadHtml}
-        onDownloadPdf={handleDownloadPdf}
-    />
+            {/* Download Modal */}
+            <DownloadModal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onDownloadMd={handleDownloadMd}
+                onDownloadHtml={handleDownloadHtml}
+                onDownloadPdf={handleDownloadPdf}
+            />
         </div >
     );
 };

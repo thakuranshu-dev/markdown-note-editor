@@ -143,29 +143,37 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 				/>
 			</div>
 			   {/* Save or Generate Button */}
-			<div className="flex justify-center">
+			<div className="flex justify-center px-4">
 				{isAIDocs && 
 					<button
-						className="w-80 px-4 py-3 text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition text-lg font-semibold"
+						className="w-full md:w-96 px-6 py-3 text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-full hover:shadow-lg transition text-lg font-semibold"
 						onClick={handleGenerate}
 						disabled={loading}
+						style={{
+							boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)',
+							transform: 'translateZ(0)',
+						}}
 					>
-						{loading ? 'Generating...' : 'Generate'}
-					</button> // If generating AI docs, show the generate button
+						{loading ? '⏳ Generating...' : '✨ Generate'}
+					</button>
 				}
 				{!isAIDocs && 
 					<button
-						className="w-80 px-4 py-3 text-white bg-green-600 rounded-lg hover:bg-blue-700 transition text-lg font-semibold"
-						style={styles.saveButton}
+						className="w-full md:w-96 h-10 px-6 py-3 text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:shadow-lg transition text-lg font-semibold"
 						onClick={handleSave}
+						style={{
+							boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+							transform: 'translateZ(0)',
+							fontSize: '1rem',
+							fontWeight: '600',
+						}}
 					>
-						Save Doc.
+						Save Doc
 					</button>
-					// If not generating AI docs, show the save button
 				}
 			</div>
 			   {/* Loading Indicator */}
-			{loading && <div className="text-blue-600 mt-2">Generating with AI...</div>}
+			{loading && <div className="text-blue-600 mt-2 text-sm md:text-base text-center font-medium">⚡ Generating with AI...</div>}
 		</div>
 	);
 };
@@ -177,46 +185,58 @@ const styles = {
 		display: 'flex',
 		flexDirection: 'column',
 		height: '100vh',
-		padding: '10px',
-		gap: '10px',
+		padding: '12px',
+		gap: '12px',
 		boxSizing: 'border-box',
+		background: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
 	},
 	editorContainer: {
 		display: 'flex',
 		flex: 1,
-		gap: '10px',
+		gap: '12px',
 		overflow: 'hidden',
+		flexDirection: 'row',
 	},
 	textarea: {
 		flex: 1,
-		padding: '10px',
-		fontSize: '16px',
-		fontFamily: 'monospace',
-		border: '1px solid #ccc',
-		borderRadius: '8px',
+		padding: '16px',
+		fontSize: '15px',
+		fontFamily: "'Fira Code', 'Courier New', monospace",
+		border: 'none',
+		borderRadius: '12px',
 		resize: 'none',
 		height: '100%',
+		backgroundColor: 'white',
+		boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
+		outline: 'none',
+		transition: 'all 0.3s ease',
+		color: '#333',
+		lineHeight: '1.6',
 	},
 	preview: {
 		flex: 1,
-		padding: '10px',
-		fontSize: '16px',
-		border: '1px solid #ccc',
-		borderRadius: '8px',
+		padding: '16px',
+		fontSize: '15px',
+		border: 'none',
+		borderRadius: '12px',
 		overflowY: 'auto',
 		height: '100%',
-		backgroundColor: '#f9f9f9',
+		backgroundColor: 'white',
+		boxShadow: '0 4px 15px rgba(102, 126, 234, 0.1)',
+		lineHeight: '1.7',
 	},
 	saveButton: {
 		alignSelf: 'center',
-		padding: '10px 20px',
+		padding: '12px 28px',
 		fontSize: '16px',
+		fontWeight: '600',
 		color: 'white',
-		backgroundColor: '#4CAF50',
+		backgroundColor: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
 		border: 'none',
-		borderRadius: '8px',
+		borderRadius: '50px',
 		cursor: 'pointer',
-		transition: 'background-color 0.3s',
+		transition: 'all 0.3s ease',
+		boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
 	},
 };
 
