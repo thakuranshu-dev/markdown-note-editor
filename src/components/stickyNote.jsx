@@ -171,7 +171,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
                 />
                 </div> */}
                 <div
-                    className="markdown-body px-4 shadow bg-[#e5e9f2] h-8 flex items-center "
+                    className="markdown-body px-4 shadow bg-[#e5e9f2] min-h-8 flex items-center "
                     dangerouslySetInnerHTML={getMarkdownHeading(mdNote)}
                 />
             </div>
