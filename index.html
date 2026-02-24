@@ -1,612 +1,679 @@
 <!doctype html>
 <html lang="en">
-  	<head>
-    	<meta charset="UTF-8" />
-    	<link rel="icon" type="image/png" href="/img.png" />
-    	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    	<title>Markdown Docs Editor - Professional Markdown Editor Made Simple</title>
-    	<style>
-    		* {
-    			margin: 0;
-    			padding: 0;
-    			box-sizing: border-box;
-    		}
-
-    		body {
-    			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    				'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    				sans-serif;
-    			line-height: 1.6;
-    			color: #333;
-    		}
-
-    		/* Landing Page Styles */
-    		.landing-page {
-    			min-height: 100vh;
-    			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    			color: white;
-    			padding: 0;
-    		}
-
-    		/* Navigation */
-    		.nav-bar {
-    			display: flex;
-    			justify-content: space-between;
-    			align-items: center;
-    			padding: 1.5rem 2rem;
-    			background: rgba(0, 0, 0, 0.1);
-    			backdrop-filter: blur(10px);
-    			position: sticky;
-    			top: 0;
-    			z-index: 1000;
-    			animation: slideDown 0.6s ease-out;
-    		}
-
-    		.logo-section {
-    			display: flex;
-    			align-items: center;
-    			gap: 0.5rem;
-    			font-size: 1.5rem;
-    			font-weight: bold;
-    			letter-spacing: -1px;
-    		}
-
-    		.logo-icon {
-    			font-size: 2rem;
-    			animation: float 3s ease-in-out infinite;
-    		}
-
-    		.nav-buttons {
-    			display: flex;
-    			gap: 1rem;
-    		}
-
-    		.btn-primary, .btn-secondary {
-    			padding: 0.75rem 1.5rem;
-    			border: none;
-    			border-radius: 50px;
-    			font-weight: 600;
-    			cursor: pointer;
-    			transition: all 0.3s ease;
-    			font-size: 1rem;
-    		}
-
-    		.btn-primary {
-    			background: white;
-    			color: #667eea;
-    			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    		}
-
-    		.btn-primary:hover {
-    			transform: translateY(-3px);
-    			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    		}
-
-    		.btn-secondary {
-    			background: transparent;
-    			color: white;
-    			border: 2px solid white;
-    		}
-
-    		.btn-secondary:hover {
-    			background: white;
-    			color: #667eea;
-    		}
-
-    		/* Hero Section */
-    		.hero-section {
-    			display: flex;
-    			justify-content: space-between;
-    			align-items: center;
-    			padding: 4rem 2rem;
-    			max-width: 1200px;
-    			margin: 0 auto;
-    			gap: 4rem;
-    			animation: fadeInUp 0.8s ease-out 0.2s backwards;
-    		}
-
-    		.hero-content {
-    			flex: 1;
-    		}
-
-    		.hero-content h1 {
-    			font-size: 3.5rem;
-    			margin-bottom: 1.5rem;
-    			font-weight: 800;
-    			line-height: 1.2;
-    			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-    		}
-
-    		.hero-content p {
-    			font-size: 1.2rem;
-    			margin-bottom: 2rem;
-    			opacity: 0.95;
-    			line-height: 1.8;
-    		}
-
-    		.cta-buttons {
-    			display: flex;
-    			gap: 1rem;
-    			flex-wrap: wrap;
-    		}
-
-    		.btn-cta {
-    			padding: 1rem 2rem;
-    			border: none;
-    			border-radius: 50px;
-    			font-weight: 700;
-    			cursor: pointer;
-    			font-size: 1.1rem;
-    			transition: all 0.3s ease;
-    			display: inline-flex;
-    			align-items: center;
-    			gap: 0.5rem;
-    			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    		}
-
-    		.btn-start {
-    			background: white;
-    			color: #667eea;
-    		}
-
-    		.btn-start:hover {
-    			transform: translateY(-5px);
-    			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    		}
-
-    		.hero-image {
-    			flex: 1;
-    			display: flex;
-    			justify-content: center;
-    			align-items: center;
-    		}
-
-    		.hero-illustration {
-    			font-size: 15rem;
-    			animation: float 4s ease-in-out infinite;
-    			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
-    		}
-
-    		/* Features Section */
-    		.features-section {
-    			background: white;
-    			color: #333;
-    			padding: 4rem 2rem;
-    		}
-
-    		.section-header {
-    			text-align: center;
-    			margin-bottom: 3rem;
-    			animation: fadeInUp 0.8s ease-out;
-    		}
-
-    		.section-header h2 {
-    			font-size: 2.5rem;
-    			margin-bottom: 1rem;
-    			color: #667eea;
-    			font-weight: 800;
-    		}
-
-    		.section-header p {
-    			font-size: 1.1rem;
-    			color: #666;
-    			max-width: 600px;
-    			margin: 0 auto;
-    		}
-
-    		.features-grid {
-    			display: grid;
-    			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    			gap: 2rem;
-    			max-width: 1200px;
-    			margin: 0 auto;
-    		}
-
-    		.feature-card {
-    			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    			padding: 2rem;
-    			border-radius: 15px;
-    			text-align: center;
-    			transition: all 0.3s ease;
-    			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    			animation: fadeInUp 0.8s ease-out backwards;
-    		}
-
-    		.feature-card:nth-child(1) { animation-delay: 0.1s; }
-    		.feature-card:nth-child(2) { animation-delay: 0.2s; }
-    		.feature-card:nth-child(3) { animation-delay: 0.3s; }
-    		.feature-card:nth-child(4) { animation-delay: 0.4s; }
-    		.feature-card:nth-child(5) { animation-delay: 0.5s; }
-    		.feature-card:nth-child(6) { animation-delay: 0.6s; }
-
-    		.feature-card:hover {
-    			transform: translateY(-10px);
-    			box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
-    			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    			color: white;
-    		}
-
-    		.feature-icon {
-    			font-size: 3rem;
-    			margin-bottom: 1rem;
-    			display: inline-block;
-    			animation: bounce 2s ease-in-out infinite;
-    		}
-
-    		.feature-card:hover .feature-icon {
-    			animation: spin 0.6s ease-in-out;
-    		}
-
-    		.feature-card h3 {
-    			font-size: 1.3rem;
-    			margin-bottom: 0.5rem;
-    			font-weight: 700;
-    		}
-
-    		.feature-card p {
-    			font-size: 0.95rem;
-    			line-height: 1.6;
-    		}
-
-    		/* How to Use Section */
-    		.how-to-section {
-    			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    			padding: 4rem 2rem;
-    			color: #333;
-    		}
-
-    		.steps-container {
-    			max-width: 1200px;
-    			margin: 0 auto;
-    			display: grid;
-    			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    			gap: 2rem;
-    		}
-
-    		.step {
-    			background: white;
-    			padding: 2rem;
-    			border-radius: 15px;
-    			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    			position: relative;
-    			animation: fadeInUp 0.8s ease-out backwards;
-    			transition: all 0.3s ease;
-    		}
-
-    		.step:nth-child(1) { animation-delay: 0.1s; }
-    		.step:nth-child(2) { animation-delay: 0.2s; }
-    		.step:nth-child(3) { animation-delay: 0.3s; }
-    		.step:nth-child(4) { animation-delay: 0.4s; }
-
-    		.step:hover {
-    			transform: translateY(-5px);
-    			box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-    		}
-
-    		.step-number {
-    			position: absolute;
-    			top: -15px;
-    			left: 20px;
-    			width: 40px;
-    			height: 40px;
-    			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    			color: white;
-    			border-radius: 50%;
-    			display: flex;
-    			align-items: center;
-    			justify-content: center;
-    			font-weight: bold;
-    			font-size: 1.2rem;
-    			box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    		}
-
-    		.step h3 {
-    			margin-top: 1rem;
-    			margin-bottom: 0.5rem;
-    			font-size: 1.2rem;
-    			color: #667eea;
-    		}
-
-    		.step p {
-    			color: #666;
-    			line-height: 1.6;
-    		}
-
-    		/* CTA Section */
-    		.cta-final-section {
-    			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    			color: white;
-    			padding: 4rem 2rem;
-    			text-align: center;
-    		}
-
-    		.cta-final-section h2 {
-    			font-size: 2.5rem;
-    			margin-bottom: 1rem;
-    			font-weight: 800;
-    		}
-
-    		.cta-final-section p {
-    			font-size: 1.1rem;
-    			margin-bottom: 2rem;
-    			opacity: 0.95;
-    			max-width: 600px;
-    			margin-left: auto;
-    			margin-right: auto;
-    		}
-
-    		.btn-large {
-    			background: white;
-    			color: #667eea;
-    			padding: 1.2rem 3rem;
-    			border: none;
-    			border-radius: 50px;
-    			font-weight: 700;
-    			font-size: 1.1rem;
-    			cursor: pointer;
-    			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    			transition: all 0.3s ease;
-    		}
-
-    		.btn-large:hover {
-    			transform: translateY(-5px);
-    			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-    		}
-
-    		/* Footer */
-    		.footer {
-    			background: #1a1a1a;
-    			color: #999;
-    			padding: 2rem;
-    			text-align: center;
-    			border-top: 1px solid #333;
-    		}
-
-    		/* Animations */
-    		@keyframes slideDown {
-    			from {
-    				opacity: 0;
-    				transform: translateY(-20px);
-    			}
-    			to {
-    				opacity: 1;
-    				transform: translateY(0);
-    			}
-    		}
-
-    		@keyframes fadeInUp {
-    			from {
-    				opacity: 0;
-    				transform: translateY(30px);
-    			}
-    			to {
-    				opacity: 1;
-    				transform: translateY(0);
-    			}
-    		}
-
-    		@keyframes float {
-    			0%, 100% {
-    				transform: translateY(0px);
-    			}
-    			50% {
-    				transform: translateY(-20px);
-    			}
-    		}
-
-    		@keyframes bounce {
-    			0%, 100% {
-    				transform: scale(1);
-    			}
-    			50% {
-    				transform: scale(1.1);
-    			}
-    		}
-
-    		@keyframes spin {
-    			from {
-    				transform: rotate(0deg);
-    			}
-    			to {
-    				transform: rotate(360deg);
-    			}
-    		}
-
-    		/* Responsive Design */
-    		@media (max-width: 768px) {
-    			.nav-buttons {
-    				gap: 0.5rem;
-    			}
-
-    			.btn-primary, .btn-secondary {
-    				padding: 0.6rem 1rem;
-    				font-size: 0.9rem;
-    			}
-
-    			.hero-section {
-    				flex-direction: column;
-    				padding: 2rem 1rem;
-    				gap: 2rem;
-    			}
-
-    			.hero-content h1 {
-    				font-size: 2rem;
-    			}
-
-    			.hero-content p {
-    				font-size: 1rem;
-    			}
-
-    			.hero-illustration {
-    				font-size: 8rem;
-    			}
-
-    			.cta-buttons {
-    				flex-direction: column;
-    			}
-
-    			.btn-cta {
-    				width: 100%;
-    				justify-content: center;
-    			}
-
-    			.section-header h2 {
-    				font-size: 1.8rem;
-    			}
-
-    			.cta-final-section h2 {
-    				font-size: 1.8rem;
-    			}
-
-    			.features-grid {
-    				gap: 1.5rem;
-    			}
-
-    			.feature-card {
-    				padding: 1.5rem;
-    			}
-    		}
-
-    		@media (max-width: 480px) {
-    			.nav-bar {
-    				flex-direction: column;
-    				gap: 1rem;
-    				padding: 1rem;
-    			}
-
-    			.hero-section {
-    				padding: 1rem;
-    			}
-
-    			.hero-content h1 {
-    				font-size: 1.5rem;
-    			}
-
-    			.hero-illustration {
-    				font-size: 6rem;
-    			}
-
-    			.section-header h2 {
-    				font-size: 1.5rem;
-    			}
-    		}
-    	</style>
-  	</head>
-  	<body>
-		<section class="landing-page">
-			<!-- Navigation Bar -->
-			<div class="nav-bar">
-				<div class="logo-section">
-					<span class="logo-icon">📝</span>
-					<span>MarkdownPro</span>
-				</div>
-				<div class="nav-buttons">
-					<a href="#features" class="btn-secondary">Features</a>
-					<button class="btn-primary" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">Get Started</button>
+
+<head>
+	<meta charset="UTF-8" />
+	<link rel="icon" type="image/png" href="/img.png" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description"
+		content="MarkdownPro is a simple but powerful markdown editor designed for developers, writers, and note-takers. Create beautiful documentation with real-time preview, KaTeX support, and Mermaid diagrams. Start writing your markdown documents today!" />
+	<meta name="keywords" content="markdown editor, markdown preview, markdown documentation, markdown notes, markdown support, KaTeX, Mermaid diagrams" />
+	<meta name="author" content="Anshu Thakur" />
+
+	<meta property="og:title" content="Markdown Docs Editor — Online Markdown Editor" />
+  <meta property="og:description" content="Markdown Docs Editor — Fast and simple Markdown editor online" />
+  <meta property="og:image" content="https://markdown-docs-editor.netlify.app/og-image.jpeg" />
+  <meta property="og:url" content="https://markdown-docs-editor.netlify.app/" />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Markdown Docs Editor — Online Markdown Editor" />
+  <meta name="twitter:description" content="Markdown Docs Editor — Fast and simple Markdown editor online" />
+  <meta name="twitter:image" content="https://markdown-docs-editor.netlify.app/og-image.jpeg" />
+
+
+	<title>Markdown Docs Editor - Professional Markdown Editor Made Simple</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+				'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+				sans-serif;
+			line-height: 1.6;
+			color: #333;
+		}
+
+		/* Landing Page Styles */
+		.landing-page {
+			min-height: 100vh;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			padding: 0;
+		}
+
+		/* Navigation */
+		.nav-bar {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 1.5rem 2rem;
+			background: rgba(0, 0, 0, 0.1);
+			backdrop-filter: blur(10px);
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			animation: slideDown 0.6s ease-out;
+		}
+
+		.logo-section {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			font-size: 1.5rem;
+			font-weight: bold;
+			letter-spacing: -1px;
+		}
+
+		.logo-icon {
+			font-size: 2rem;
+			animation: float 3s ease-in-out infinite;
+		}
+
+		.nav-buttons {
+			display: flex;
+			gap: 1rem;
+		}
+
+		.btn-primary,
+		.btn-secondary {
+			padding: 0.75rem 1.5rem;
+			border: none;
+			border-radius: 50px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			font-size: 1rem;
+		}
+
+		.btn-primary {
+			background: white;
+			color: #667eea;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+		}
+
+		.btn-primary:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+		}
+
+		.btn-secondary {
+			background: transparent;
+			color: white;
+			border: 2px solid white;
+		}
+
+		.btn-secondary:hover {
+			background: white;
+			color: #667eea;
+		}
+
+		/* Hero Section */
+		.hero-section {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			padding: 4rem 2rem;
+			max-width: 1200px;
+			margin: 0 auto;
+			gap: 4rem;
+			animation: fadeInUp 0.8s ease-out 0.2s backwards;
+		}
+
+		.hero-content {
+			flex: 1;
+		}
+
+		.hero-content h1 {
+			font-size: 3.5rem;
+			margin-bottom: 1.5rem;
+			font-weight: 800;
+			line-height: 1.2;
+			text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.hero-content p {
+			font-size: 1.2rem;
+			margin-bottom: 2rem;
+			opacity: 0.95;
+			line-height: 1.8;
+		}
+
+		.cta-buttons {
+			display: flex;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.btn-cta {
+			padding: 1rem 2rem;
+			border: none;
+			border-radius: 50px;
+			font-weight: 700;
+			cursor: pointer;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			display: inline-flex;
+			align-items: center;
+			gap: 0.5rem;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+		}
+
+		.btn-start {
+			background: white;
+			color: #667eea;
+		}
+
+		.btn-start:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+		}
+
+		.hero-image {
+			flex: 1;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.hero-illustration {
+			font-size: 15rem;
+			animation: float 4s ease-in-out infinite;
+			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
+		}
+
+		/* Features Section */
+		.features-section {
+			background: white;
+			color: #333;
+			padding: 4rem 2rem;
+		}
+
+		.section-header {
+			text-align: center;
+			margin-bottom: 3rem;
+			animation: fadeInUp 0.8s ease-out;
+		}
+
+		.section-header h2 {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+			color: #667eea;
+			font-weight: 800;
+		}
+
+		.section-header p {
+			font-size: 1.1rem;
+			color: #666;
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.features-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+			gap: 2rem;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		.feature-card {
+			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+			padding: 2rem;
+			border-radius: 15px;
+			text-align: center;
+			transition: all 0.3s ease;
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+			animation: fadeInUp 0.8s ease-out backwards;
+		}
+
+		.feature-card:nth-child(1) {
+			animation-delay: 0.1s;
+		}
+
+		.feature-card:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+
+		.feature-card:nth-child(3) {
+			animation-delay: 0.3s;
+		}
+
+		.feature-card:nth-child(4) {
+			animation-delay: 0.4s;
+		}
+
+		.feature-card:nth-child(5) {
+			animation-delay: 0.5s;
+		}
+
+		.feature-card:nth-child(6) {
+			animation-delay: 0.6s;
+		}
+
+		.feature-card:hover {
+			transform: translateY(-10px);
+			box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+		}
+
+		.feature-icon {
+			font-size: 3rem;
+			margin-bottom: 1rem;
+			display: inline-block;
+			animation: bounce 2s ease-in-out infinite;
+		}
+
+		.feature-card:hover .feature-icon {
+			animation: spin 0.6s ease-in-out;
+		}
+
+		.feature-card h3 {
+			font-size: 1.3rem;
+			margin-bottom: 0.5rem;
+			font-weight: 700;
+		}
+
+		.feature-card p {
+			font-size: 0.95rem;
+			line-height: 1.6;
+		}
+
+		/* How to Use Section */
+		.how-to-section {
+			background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+			padding: 4rem 2rem;
+			color: #333;
+		}
+
+		.steps-container {
+			max-width: 1200px;
+			margin: 0 auto;
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+			gap: 2rem;
+		}
+
+		.step {
+			background: white;
+			padding: 2rem;
+			border-radius: 15px;
+			box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+			position: relative;
+			animation: fadeInUp 0.8s ease-out backwards;
+			transition: all 0.3s ease;
+		}
+
+		.step:nth-child(1) {
+			animation-delay: 0.1s;
+		}
+
+		.step:nth-child(2) {
+			animation-delay: 0.2s;
+		}
+
+		.step:nth-child(3) {
+			animation-delay: 0.3s;
+		}
+
+		.step:nth-child(4) {
+			animation-delay: 0.4s;
+		}
+
+		.step:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+		}
+
+		.step-number {
+			position: absolute;
+			top: -15px;
+			left: 20px;
+			width: 40px;
+			height: 40px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: bold;
+			font-size: 1.2rem;
+			box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+		}
+
+		.step h3 {
+			margin-top: 1rem;
+			margin-bottom: 0.5rem;
+			font-size: 1.2rem;
+			color: #667eea;
+		}
+
+		.step p {
+			color: #666;
+			line-height: 1.6;
+		}
+
+		/* CTA Section */
+		.cta-final-section {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			padding: 4rem 2rem;
+			text-align: center;
+		}
+
+		.cta-final-section h2 {
+			font-size: 2.5rem;
+			margin-bottom: 1rem;
+			font-weight: 800;
+		}
+
+		.cta-final-section p {
+			font-size: 1.1rem;
+			margin-bottom: 2rem;
+			opacity: 0.95;
+			max-width: 600px;
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		.btn-large {
+			background: white;
+			color: #667eea;
+			padding: 1.2rem 3rem;
+			border: none;
+			border-radius: 50px;
+			font-weight: 700;
+			font-size: 1.1rem;
+			cursor: pointer;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+			transition: all 0.3s ease;
+		}
+
+		.btn-large:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+		}
+
+		/* Footer */
+		.footer {
+			background: #1a1a1a;
+			color: #999;
+			padding: 2rem;
+			text-align: center;
+			border-top: 1px solid #333;
+		}
+
+		/* Animations */
+		@keyframes slideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes fadeInUp {
+			from {
+				opacity: 0;
+				transform: translateY(30px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@keyframes float {
+
+			0%,
+			100% {
+				transform: translateY(0px);
+			}
+
+			50% {
+				transform: translateY(-20px);
+			}
+		}
+
+		@keyframes bounce {
+
+			0%,
+			100% {
+				transform: scale(1);
+			}
+
+			50% {
+				transform: scale(1.1);
+			}
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0deg);
+			}
+
+			to {
+				transform: rotate(360deg);
+			}
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.nav-buttons {
+				gap: 0.5rem;
+			}
+
+			.btn-primary,
+			.btn-secondary {
+				padding: 0.6rem 1rem;
+				font-size: 0.9rem;
+			}
+
+			.hero-section {
+				flex-direction: column;
+				padding: 2rem 1rem;
+				gap: 2rem;
+			}
+
+			.hero-content h1 {
+				font-size: 2rem;
+			}
+
+			.hero-content p {
+				font-size: 1rem;
+			}
+
+			.hero-illustration {
+				font-size: 8rem;
+			}
+
+			.cta-buttons {
+				flex-direction: column;
+			}
+
+			.btn-cta {
+				width: 100%;
+				justify-content: center;
+			}
+
+			.section-header h2 {
+				font-size: 1.8rem;
+			}
+
+			.cta-final-section h2 {
+				font-size: 1.8rem;
+			}
+
+			.features-grid {
+				gap: 1.5rem;
+			}
+
+			.feature-card {
+				padding: 1.5rem;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.nav-bar {
+				flex-direction: column;
+				gap: 1rem;
+				padding: 1rem;
+			}
+
+			.hero-section {
+				padding: 1rem;
+			}
+
+			.hero-content h1 {
+				font-size: 1.5rem;
+			}
+
+			.hero-illustration {
+				font-size: 6rem;
+			}
+
+			.section-header h2 {
+				font-size: 1.5rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<section class="landing-page">
+		<!-- Navigation Bar -->
+		<div class="nav-bar">
+			<div class="logo-section">
+				<span class="logo-icon">📝</span>
+				<span>MarkdownPro</span>
+			</div>
+			<div class="nav-buttons">
+				<button class="btn-secondary"
+						onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">Features</button>
+				<button class="btn-primary" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">Get
+					Started</button>
+			</div>
+		</div>
+
+		<!-- Hero Section -->
+		<div class="hero-section">
+			<div class="hero-content">
+				<h1>Write, Preview & Save Your Markdown Documents</h1>
+				<p>A powerful, modern markdown editor designed for developers, writers, and note-takers. Create beautiful
+					documentation with real-time preview, 
+					<a href="https://katex.org/" target="_blank" style="text-decoration: underline;">KaTeX</a> support, 
+					and <a href="https://mermaid.js.org/" target="_blank" style="text-decoration: underline;">Mermaid </a>diagrams.</p>
+				<div class="cta-buttons">
+					<button class="btn-cta btn-start"
+						onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">🚀 Start Writing</button>
+					<button class="btn-cta" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;"
+						onclick="document.getElementById('how-to-use').scrollIntoView({behavior: 'smooth'})">Learn More →</button>
 				</div>
 			</div>
-
-			<!-- Hero Section -->
-			<div class="hero-section">
-				<div class="hero-content">
-					<h1>Write, Preview & Save Your Markdown Documents</h1>
-					<p>A powerful, modern markdown editor designed for developers, writers, and note-takers. Create beautiful documentation with real-time preview, KaTeX support, and Mermaid diagrams.</p>
-					<div class="cta-buttons">
-						<button class="btn-cta btn-start" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">🚀 Start Writing</button>
-						<button class="btn-cta" style="background: rgba(255,255,255,0.2); color: white; border: 2px solid white;" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">Learn More →</button>
-					</div>
-				</div>
-				<div class="hero-image">
-					<div class="hero-illustration">✨</div>
-				</div>
+			<div class="hero-image">
+				<div class="hero-illustration">✨</div>
 			</div>
-		</section>
+		</div>
+	</section>
 
-		<!-- Features Section -->
-		<section class="features-section" id="features">
-			<div class="section-header">
-				<h2>Powerful Features</h2>
-				<p>Everything you need for professional markdown editing and note management</p>
+	<!-- Features Section -->
+	<section class="features-section" id="features">
+		<div class="section-header">
+			<h2>Powerful Features</h2>
+			<p>Everything you need for professional markdown editing and note management</p>
+		</div>
+		<div class="features-grid">
+			<div class="feature-card">
+				<div class="feature-icon">📖</div>
+				<h3>Real-time Preview</h3>
+				<p>See your markdown rendered instantly as you type with live preview panel side-by-side</p>
 			</div>
-			<div class="features-grid">
-				<div class="feature-card">
-					<div class="feature-icon">📖</div>
-					<h3>Real-time Preview</h3>
-					<p>See your markdown rendered instantly as you type with live preview panel side-by-side</p>
-				</div>
-				<div class="feature-card">
-					<div class="feature-icon">💾</div>
-					<h3>Auto Save</h3>
-					<p>Your documents are saved to browser storage, never lose your work</p>
-				</div>
-				<div class="feature-card">
-					<div class="feature-icon">📐</div>
-					<h3>KaTeX Support</h3>
-					<p>Write complex mathematical equations with full KaTeX rendering support</p>
-				</div>
-				<div class="feature-card">
-					<div class="feature-icon">🎨</div>
-					<h3>Mermaid Diagrams</h3>
-					<p>Create beautiful flowcharts, sequence diagrams, and more with Mermaid</p>
-				</div>
-				<div class="feature-card">
-					<div class="feature-icon">📥</div>
-					<h3>Multiple Formats</h3>
-					<p>Download your documents as Markdown, HTML, or PDF with a single click</p>
-				</div>
-				<div class="feature-card">
-					<div class="feature-icon">📱</div>
-					<h3>Mobile Friendly</h3>
-					<p>Fully responsive design works seamlessly on mobile, tablet, and desktop</p>
-				</div>
+			<div class="feature-card">
+				<div class="feature-icon">💾</div>
+				<h3>Auto Save</h3>
+				<p>Your documents are saved to browser storage, never lose your work</p>
 			</div>
-		</section>
-
-		<!-- How to Use Section -->
-		<section class="how-to-section">
-			<div class="section-header">
-				<h2>How to Use</h2>
-				<p>Get started with MarkdownPro in just 4 simple steps</p>
+			<div class="feature-card">
+				<div class="feature-icon">📐</div>
+				<h3>KaTeX Support</h3>
+				<p>Write complex mathematical equations with full <a href="https://katex.org/" target="_blank" style="text-decoration: underline;">KaTeX</a> rendering support</p>
 			</div>
-			<div class="steps-container">
-				<div class="step">
-					<div class="step-number">1</div>
-					<h3>Start Writing</h3>
-					<p>Type or paste your markdown content in the editor panel on the left side</p>
-				</div>
-				<div class="step">
-					<div class="step-number">2</div>
-					<h3>See Preview</h3>
-					<p>Watch your content render in real-time on the preview panel on the right</p>
-				</div>
-				<div class="step">
-					<div class="step-number">3</div>
-					<h3>Save Document</h3>
-					<p>Click the "Save Doc" button to store your document in your personal library</p>
-				</div>
-				<div class="step">
-					<div class="step-number">4</div>
-					<h3>Download</h3>
-					<p>Export your document in Markdown, HTML, or PDF format whenever you need</p>
-				</div>
+			<div class="feature-card">
+				<div class="feature-icon">🎨</div>
+				<h3>Mermaid Diagrams</h3>
+				<p>Create beautiful flowcharts, sequence diagrams, and more with <a href="https://mermaid.js.org/" target="_blank" style="text-decoration: underline;">Mermaid </a></p>
 			</div>
-		</section>
+			<div class="feature-card">
+				<div class="feature-icon">📥</div>
+				<h3>Multiple Formats</h3>
+				<p>Download your documents as Markdown, HTML, or PDF with a single click</p>
+			</div>
+			<div class="feature-card">
+				<div class="feature-icon">📱</div>
+				<h3>Mobile Friendly</h3>
+				<p>Fully responsive design works seamlessly on mobile, tablet, and desktop</p>
+			</div>
+		</div>
+	</section>
 
-		<!-- Final CTA Section -->
-		<section class="cta-final-section">
-			<h2>Ready to Start Writing?</h2>
-			<p>Join thousands of developers and writers who use MarkdownPro for their documentation and note-taking needs</p>
-			<button class="btn-large" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">Get Started Now →</button>
-		</section>
+	<!-- How to Use Section -->
+	<section class="how-to-section" id="how-to-use">
+		<div class="section-header">
+			<h2>How to Use</h2>
+			<p>Get started with MarkdownPro in just 4 simple steps</p>
+		</div>
+		<div class="steps-container">
+			<div class="step">
+				<div class="step-number">1</div>
+				<h3>Start Writing</h3>
+				<p>Type or paste your markdown content in the editor panel on the left side</p>
+			</div>
+			<div class="step">
+				<div class="step-number">2</div>
+				<h3>See Preview</h3>
+				<p>Watch your content render in real-time on the preview panel on the right</p>
+			</div>
+			<div class="step">
+				<div class="step-number">3</div>
+				<h3>Save Document</h3>
+				<p>Click the "Save Doc" button to store your document in your personal library</p>
+			</div>
+			<div class="step">
+				<div class="step-number">4</div>
+				<h3>Download</h3>
+				<p>Export your document in Markdown, HTML, or PDF format whenever you need</p>
+			</div>
+		</div>
+	</section>
 
-		<div id="root"></div>
+	<!-- Final CTA Section -->
+	<section class="cta-final-section">
+		<h2>Ready to Start Writing?</h2>
+		<p>Join thousands of developers and writers who use MarkdownPro for their documentation and note-taking needs</p>
+		<button class="btn-large" onclick="document.getElementById('root').scrollIntoView({behavior: 'smooth'})">Get Started
+			Now →</button>
+	</section>
 
-		<!-- Footer -->
-		<footer class="footer">
-			<p>&copy; 2024 MarkdownPro. Crafted with ❤️ for writers and developers.</p>
-		</footer>
+	<div id="root"></div>
+
+	<!-- Footer -->
+	<footer class="footer">
+		<p>&copy; 2024 MarkdownPro. Crafted with ❤️ for writers and developers.</p>
+	</footer>
 
 
-    	<script type="module" src="/src/main.jsx"></script>
-  	</body>
+	<script type="module" src="/src/main.jsx"></script>
+</body>
+
 </html>

@@ -1,0 +1,16 @@
+# robots.txt for Markdown Docs Editor
+# Allow all crawlers to access the site
+
+User-agent: *
+Allow: /
+Disallow: 
+
+# Specific rules for common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Specify sitemap location
+Sitemap: https://markdown-docs-editor.netlify.app/sitemap.xml
