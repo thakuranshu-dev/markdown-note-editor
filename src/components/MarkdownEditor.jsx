@@ -22,7 +22,14 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 			code({text, lang}) {
 				// If code block has language 'mermaid', render it as mermaid diagram
 				if (lang === 'mermaid') {
-					return `<pre class="mermaid">${text}</pre>`;
+					// Escape any special characters in the mermaid text for proper rendering
+					const escapedText = text
+						.replace(/&/g, '&amp;')
+						.replace(/</g, '&lt;')
+						.replace(/>/g, '&gt;')
+						.replace(/"/g, '&quot;')
+						.replace(/'/g, '&#039;');
+					return `<div class="mermaid">\n${text}\n</div>`;
 				}
 				// Otherwise use default code block rendering
 				return `<pre><code class="language-${lang || 'plaintext'}">${text}</code></pre>`;
@@ -31,15 +38,30 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		marked.use({ renderer });
 		
 		// Initialize mermaid for diagram rendering
-		mermaid.initialize({ startOnLoad: false, theme: 'default', securityLevel: 'loose' });
+		mermaid.initialize({ 
+			startOnLoad: false, 
+			theme: 'default', 
+			securityLevel: 'loose',
+			logLevel: 'debug'
+		});
 	}, []);
 
 	// Effect to render mermaid diagrams whenever markdown changes
 	useEffect(() => {
 		if (previewRef.current && markdown) {
 			// Use setTimeout to ensure DOM is updated before running mermaid
-			setTimeout(() => {
-				mermaid.run();
+			setTimeout(async () => {
+				try {
+					// Clear previous mermaid renders to prevent duplicate rendering
+					const mermaidElements = previewRef.current.querySelectorAll('.mermaid');
+					mermaidElements.forEach((el) => {
+						el.removeAttribute('data-processed');
+					});
+					// Run mermaid to render all diagrams
+					await mermaid.run();
+				} catch (error) {
+					console.error('Mermaid rendering error:', error);
+				}
 			}, 0);
 		}
 	}, [markdown]);
@@ -116,10 +138,10 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 		// Use marked to parse the markdown and DOMPurify to sanitize the HTML
 		const rawHtml = marked.parse(markdown, { breaks: true });
 		
-		// Sanitize HTML while allowing mermaid diagrams (SVG elements and pre tags with mermaid class)
+		// Sanitize HTML while allowing mermaid diagrams (SVG elements and div tags with mermaid class)
 		const sanitizedHtml = DOMPurify.sanitize(rawHtml, { 
-			ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code', 'span', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'blockquote', 'hr', 'br', 'img', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'svg', 'g', 'text', 'line', 'path', 'circle', 'ellipse', 'polygon', 'polyline', 'rect', 'defs', 'style', 'marker', 'tspan', 'title', 'desc'],
-			ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'id', 'xmlns', 'viewBox', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'x', 'y', 'd', 'fill', 'stroke', 'stroke-width', 'text-anchor', 'data-*', 'style', 'transform', 'preserveAspectRatio', 'role', 'aria-label']
+			ALLOWED_TAGS: ['div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'pre', 'code', 'span', 'a', 'strong', 'em', 'ul', 'ol', 'li', 'blockquote', 'hr', 'br', 'img', 'table', 'thead', 'tbody', 'tr', 'td', 'th', 'svg', 'g', 'text', 'line', 'path', 'circle', 'ellipse', 'polygon', 'polyline', 'rect', 'defs', 'style', 'marker', 'tspan', 'title', 'desc', 'use', 'foreignObject', 'clipPath', 'mask', 'pattern', 'image', 'a'],
+			ALLOWED_ATTR: ['class', 'href', 'src', 'alt', 'title', 'id', 'xmlns', 'viewBox', 'cx', 'cy', 'r', 'x1', 'y1', 'x2', 'y2', 'x', 'y', 'd', 'fill', 'stroke', 'stroke-width', 'text-anchor', 'data-*', 'style', 'transform', 'preserveAspectRatio', 'role', 'aria-label', 'width', 'height', 'font-size', 'font-family', 'text-anchor', 'dominant-baseline', 'marker-end', 'marker-start', 'stroke-dasharray', 'opacity', 'fill-opacity', 'stroke-opacity', 'clip-path', 'mask-id', 'xlink:href', 'xmlns:xlink']
 		});
 		
 		return { __html: sanitizedHtml };
