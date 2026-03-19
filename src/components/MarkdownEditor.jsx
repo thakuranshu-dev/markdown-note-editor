@@ -5,6 +5,7 @@ import markedKatex from 'marked-katex-extension';
 import mermaid from 'mermaid';
 import 'katex/dist/katex.min.css';
 import 'github-markdown-css/github-markdown-light.css';
+import FileUpload from './FileUpload';
 
 const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) => {
   	const [loading, setLoading] = useState(false);
@@ -158,6 +159,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 					</button>
 				}
 				{!isAIDocs && 
+				<div>
 					<button
 						className="w-full md:w-96 h-10 px-6 py-3 text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full hover:shadow-lg transition text-lg font-semibold"
 						onClick={handleSave}
@@ -170,6 +172,7 @@ const MarkdownEditor = ({ savedNotes, setSavedNotes, markdown, setMarkdown }) =>
 					>
 						Save Doc
 					</button>
+					<FileUpload /></div>
 				}
 			</div>
 			   {/* Loading Indicator */}
