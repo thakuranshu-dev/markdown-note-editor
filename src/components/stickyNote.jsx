@@ -50,30 +50,30 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
     };
 
     // Download handlers for different formats (Markdown, HTML, PDF). These functions create a Blob from the note content and trigger a download
-    const handleDownloadMd = () => {
+    const handleDownloadMd = (fileName) => {
         const blob = new Blob([typeof mdNote === 'string' ? mdNote : ''], { type: 'text/markdown' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `note-${noteIndex + 1}.md`;
+        a.download = fileName || `note-${noteIndex + 1}.md`;
         a.click();
         URL.revokeObjectURL(url);
         setModalOpen(false);
     };
 
-    const handleDownloadHtml = () => {
+    const handleDownloadHtml = (fileName) => {
         const htmlContent = marked.parse(typeof mdNote === 'string' ? mdNote : '');
         const blob = new Blob([htmlContent], { type: 'text/html' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `note-${noteIndex + 1}.html`;
+        a.download = fileName || `note-${noteIndex + 1}.html`;
         a.click();
         URL.revokeObjectURL(url);
         setModalOpen(false);
     };
 
-    const handleDownloadPdf = () => {
+    const handleDownloadPdf = (fileName) => {
         const doc = new jsPDF({
             unit: 'mm',
             format: 'a4',
@@ -92,7 +92,7 @@ const StickyNotes = ({ savedNotes, setSavedNotes, mdNote, noteIndex, setMarkdown
 
         doc.html(tempDiv, {
             callback: function (doc) {
-                doc.save(`note-${noteIndex + 1}.pdf`);
+                doc.save(fileName || `note-${noteIndex + 1}.pdf`);
                 document.body.removeChild(tempDiv);
             },
             x: 15, // left margin
